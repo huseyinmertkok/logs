@@ -3,8 +3,9 @@ package com.logs.logs.service;
 import com.logs.logs.model.LogModel;
 import com.logs.logs.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class LogService {
     private final LogRepository logRepository;
 

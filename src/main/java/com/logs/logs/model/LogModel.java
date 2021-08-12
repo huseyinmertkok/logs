@@ -14,7 +14,7 @@ public class LogModel {
     @Id
     @Field(type = FieldType.Keyword)
     private String id;
-    private DeviceModel device;
+    //private DeviceModel device;
     @Field(type = FieldType.Text)
     private String name;
     //private LogLevelEnum level;
