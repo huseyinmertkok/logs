@@ -16,8 +16,8 @@ public class Config extends AbstractElasticsearchConfiguration {
     @Value("${elasticsearch.url}")
     public String elasticsearchUrl;
 
-    @Bean
     @Override
+    @Bean
     public RestHighLevelClient elasticsearchClient() {
         final ClientConfiguration config = ClientConfiguration.builder()
                 .connectedTo(elasticsearchUrl)
