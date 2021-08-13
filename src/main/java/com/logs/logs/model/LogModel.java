@@ -9,7 +9,7 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 import java.util.Date;
 
 @Document(indexName="logIndex")
-@Setting(settingPath = "static/es-setting.json")
+@Setting(settingPath = "static/es-settings.json")
 public class LogModel {
     @Id
     @Field(type = FieldType.Keyword)

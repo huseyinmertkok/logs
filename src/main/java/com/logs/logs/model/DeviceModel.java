@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
 @Document(indexName="deviceIndex")
-@Setting(settingPath = "static/es-setting.json")
+@Setting(settingPath = "static/es-settings.json")
 public class DeviceModel {
     @Id
     @Field(type = FieldType.Keyword)
