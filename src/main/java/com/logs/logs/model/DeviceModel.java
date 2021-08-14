@@ -6,7 +6,7 @@ import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import org.springframework.data.elasticsearch.annotations.Setting;
 
-@Document(indexName="deviceIndex")
+@Document(indexName="device_index")
 @Setting(settingPath = "static/es-settings.json")
 public class DeviceModel {
     @Id

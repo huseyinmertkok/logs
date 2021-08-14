@@ -5,6 +5,9 @@ import com.logs.logs.repository.LogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class LogService {
     private final LogRepository logRepository;
@@ -18,7 +21,11 @@ public class LogService {
         logRepository.save(logModel);
     }
 
-    public LogModel findById(final String id){
-        return logRepository.findById(id).orElse(null);
+    public List<LogModel> findAll(){
+        List<LogModel> list = new ArrayList<>();
+        Iterable<LogModel> findAll = logRepository.findAll();
+        findAll.forEach(p -> list.add(p));
+        return list;
     }
+
 }

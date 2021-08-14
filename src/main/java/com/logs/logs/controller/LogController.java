@@ -5,6 +5,8 @@ import com.logs.logs.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/log")
 public class LogController {
@@ -20,8 +22,8 @@ public class LogController {
         logService.save(logModel);
     }
 
-    @GetMapping("/{id}")
-    public LogModel findById(@PathVariable final String id){
-        return logService.findById(id);
+    @GetMapping
+    public List<LogModel> findAll(){
+        return logService.findAll();
     }
 }

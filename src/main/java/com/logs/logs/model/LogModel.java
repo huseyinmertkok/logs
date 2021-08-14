@@ -8,27 +8,19 @@ import org.springframework.data.elasticsearch.annotations.Setting;
 
 import java.util.Date;
 
-@Document(indexName="logIndex")
+@Document(indexName="log_index")
 @Setting(settingPath = "static/es-settings.json")
 public class LogModel {
     @Id
     @Field(type = FieldType.Keyword)
     private String id;
-    @Field(type = FieldType.Object)
     private DeviceModel device;
-    @Field(type = FieldType.Text)
     private String name;
-    //private LogLevelEnum level;
-    @Field(type = FieldType.Text)
+    private LogLevelEnum level;
     private String request;
-    @Field(type = FieldType.Text)
     private String response;
-    @Field(type = FieldType.Text)
     private String message;
-    @Field(type = FieldType.Text)
     private Date requestDateTime;
-    @Field(type = FieldType.Text)
     private Date responseDateTime;
-    @Field(type = FieldType.Text)
     private Date createdAt;
 }
