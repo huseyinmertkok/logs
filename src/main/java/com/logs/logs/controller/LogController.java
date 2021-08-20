@@ -4,6 +4,7 @@ import com.logs.logs.model.LogModel;
 import com.logs.logs.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import search.SearchRequestDTO;
 
 import java.util.List;
 
@@ -25,5 +26,10 @@ public class LogController {
     @GetMapping
     public List<LogModel> findAll(){
         return logService.findAll();
+    }
+
+    @PostMapping("/search")
+    public List<LogModel> search(@RequestBody final SearchRequestDTO dto) {
+        return logService.search(dto);
     }
 }
