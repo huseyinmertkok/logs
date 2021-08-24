@@ -1,6 +1,7 @@
 package com.logs.logs.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.logs.logs.configuration.Config;
 import com.logs.logs.model.LogModel;
 import com.logs.logs.repository.LogRepository;
 import org.elasticsearch.action.search.SearchRequest;
@@ -25,9 +26,9 @@ public class LogService {
     private final RestHighLevelClient client;
 
     @Autowired
-    public LogService(LogRepository logRepository, @Qualifier("elasticsearchClient") RestHighLevelClient client){
+    public LogService(LogRepository logRepository, Config config){
         this.logRepository = logRepository;
-        this.client = client;
+        this.client = config.elasticsearchClient();
     }
 
     public void save(final LogModel logModel){
@@ -56,15 +57,20 @@ public class LogService {
         }
 
         try {
+            System.out.println("Request:");
+            System.out.println(request);
             final SearchResponse response = client.search(request, RequestOptions.DEFAULT);
+            System.out.println("Response:");
+            System.out.println(response);
             final SearchHit[] searchHits = response.getHits().getHits();
-            final List<LogModel> logs = new ArrayList<>(searchHits.length);
+            System.out.println("Search Hit:");
+            System.out.println(searchHits[0]);
+            final List<LogModel> logs = new ArrayList<>();
             for (SearchHit hit : searchHits) {
                 logs.add(
                         MAPPER.readValue(hit.getSourceAsString(), LogModel.class)
                 );
             }
-
             return logs;
         } catch (Exception e) {
             return Collections.emptyList();
