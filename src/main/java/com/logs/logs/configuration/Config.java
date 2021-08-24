@@ -25,4 +25,5 @@ public class Config extends AbstractElasticsearchConfiguration {
 
         return RestClients.create(config).rest();
     }
+
 }

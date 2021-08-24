@@ -23,7 +23,7 @@ public class LogModel {
     @Field(type = FieldType.Text)
     private String name;
 
-    @Field(type = FieldType.Text)
+    @Field(type = FieldType.Integer)
     private LogLevelEnum level;
 
     @Field(type = FieldType.Text)

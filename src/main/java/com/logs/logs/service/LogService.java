@@ -1,25 +1,29 @@
 package com.logs.logs.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logs.logs.configuration.Config;
 import com.logs.logs.model.LogModel;
 import com.logs.logs.repository.LogRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import search.SearchRequestDTO;
-import search.util.SearchUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 @Service
+@Slf4j
 public class LogService {
     private final LogRepository logRepository;
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -29,6 +33,7 @@ public class LogService {
     public LogService(LogRepository logRepository, Config config){
         this.logRepository = logRepository;
         this.client = config.elasticsearchClient();
+        MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public void save(final LogModel logModel){
@@ -42,39 +47,37 @@ public class LogService {
         return list;
     }
 
-    public List<LogModel> search(final SearchRequestDTO dto) {
-        final SearchRequest request = SearchUtil.buildSearchRequest(
-                "log_index",
-                dto
-        );
+    public List<LogModel> search(final SearchRequestDTO dto) throws IOException {
+        SearchRequest searchRequest = new SearchRequest("log_index");
 
-        return searchInternal(request);
-    }
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        if(dto.getName() != null)
+            boolQueryBuilder = boolQueryBuilder.must(QueryBuilders.termQuery("name",dto.getName()));
+        if(dto.getStartDate() != null)
+            boolQueryBuilder = boolQueryBuilder.must(QueryBuilders.rangeQuery("createdAt").gte(dto.getStartDate()));
+        if(dto.getEndDate() != null)
+            boolQueryBuilder = boolQueryBuilder.must(QueryBuilders.rangeQuery("createdAt").lte(dto.getEndDate()));
+        if(dto.getGemNumber() != null)
+            boolQueryBuilder = boolQueryBuilder.must(QueryBuilders.termQuery("id",dto.getGemNumber()));
+        if(dto.getLevel() > 0)
+            boolQueryBuilder = boolQueryBuilder.must(QueryBuilders.rangeQuery("level").gte(dto.getLevel()));
 
-    private List<LogModel> searchInternal(final SearchRequest request) {
-        if (request == null) {
-            return Collections.emptyList();
+
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(boolQueryBuilder);
+        searchRequest.source(sourceBuilder);
+
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        final SearchHit[] searchHits = searchResponse.getHits().getHits();
+        final List<LogModel> logs = new ArrayList<>();
+        for (SearchHit hit : searchHits) {
+            logs.add(
+                    MAPPER.readValue(hit.getSourceAsString(), LogModel.class)
+            );
         }
-
-        try {
-            System.out.println("Request:");
-            System.out.println(request);
-            final SearchResponse response = client.search(request, RequestOptions.DEFAULT);
-            System.out.println("Response:");
-            System.out.println(response);
-            final SearchHit[] searchHits = response.getHits().getHits();
-            System.out.println("Search Hit:");
-            System.out.println(searchHits[0]);
-            final List<LogModel> logs = new ArrayList<>();
-            for (SearchHit hit : searchHits) {
-                logs.add(
-                        MAPPER.readValue(hit.getSourceAsString(), LogModel.class)
-                );
-            }
-            return logs;
-        } catch (Exception e) {
-            return Collections.emptyList();
-        }
+        logs.forEach(System.out::println);
+        System.out.println(logs.size());
+        return logs;
     }
 
 }

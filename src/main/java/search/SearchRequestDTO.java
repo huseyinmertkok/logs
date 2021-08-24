@@ -1,24 +1,52 @@
 package search;
 
+
 import java.util.List;
 
 public class SearchRequestDTO {
-    private List<String> fields;
-    private String searchTerm;
+    private String name;
+    private String gemNumber;
+    private int level;
+    private String endDate;
+    private String startDate;
 
-    public List<String> getFields() {
-        return fields;
+    public String getName() {
+        return name;
     }
 
-    public void setFields(List<String> fields) {
-        this.fields = fields;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getSearchTerm() {
-        return searchTerm;
+    public String getGemNumber() {
+        return gemNumber;
     }
 
-    public void setSearchTerm(String searchTerm) {
-        this.searchTerm = searchTerm;
+    public void setGemNumber(String gemNumber) {
+        this.gemNumber = gemNumber;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
     }
 }

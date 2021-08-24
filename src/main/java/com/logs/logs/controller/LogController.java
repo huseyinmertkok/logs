@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import search.SearchRequestDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class LogController {
     }
 
     @PostMapping("/search")
-    public List<LogModel> search(@RequestBody final SearchRequestDTO dto) {
+    public List<LogModel> search(@RequestBody final SearchRequestDTO dto) throws IOException {
         return logService.search(dto);
     }
 }
