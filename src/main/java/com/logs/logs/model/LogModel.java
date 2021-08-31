@@ -2,10 +2,7 @@ package com.logs.logs.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.data.elasticsearch.annotations.Setting;
+import org.springframework.data.elasticsearch.annotations.*;
 
 import java.util.Date;
 
@@ -23,7 +20,6 @@ public class LogModel {
     @Field(type = FieldType.Text)
     private String name;
 
-    @Field(type = FieldType.Integer)
     private LogLevelEnum level;
 
     @Field(type = FieldType.Text)
@@ -35,12 +31,12 @@ public class LogModel {
     @Field(type = FieldType.Text)
     private String message;
 
-    @Field(type = FieldType.Date)
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
     private Date requestDateTime;
 
-    @Field(type = FieldType.Date)
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
     private Date responseDateTime;
 
-    @Field(type = FieldType.Date)
+    @Field(type = FieldType.Date, format = DateFormat.date_hour_minute_second)
     private Date createdAt;
 }
